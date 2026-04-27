@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: availability-service
+  labels:
+    app: availability-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: availability-service
+  template:
+    metadata:
+      labels:
+        app: availability-service
+    spec:
+      containers:
+      - name: availability-service
+        image: pavithrasambath2003/availability-service:v1
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          tcpSocket:
+            port: 5004
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 5004
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        ports:
+        - containerPort: 5004
+        env:
+        - name: PORT
+          value: "5004"
+        envFrom:
+        - configMapRef:
+            name: medicojob-config
+        - secretRef:
+            name: medicojob-secrets
+
+
+

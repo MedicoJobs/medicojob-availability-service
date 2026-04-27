@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const availabilitySchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
@@ -7,4 +7,4 @@ const availabilitySchema = new mongoose.Schema({
   shiftEnd: { type: String }   // e.g., "17:00"
 }, { timestamps: true });
 
-module.exports = mongoose.model('Availability', availabilitySchema);
+export default mongoose.model('Availability', availabilitySchema);
