@@ -1,9 +1,6 @@
 name: availability-service CI Pipeline
 
 on:
-  push:
-    branches:
-      - feature-branch
   pull_request:
     types:
       - opened

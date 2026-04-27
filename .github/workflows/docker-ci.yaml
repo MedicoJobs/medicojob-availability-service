@@ -1,6 +1,7 @@
 name: availability-service Docker Image Pipeline
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - closed
@@ -17,7 +18,7 @@ permissions:
 
 jobs:
   docker:
-    if: ${{ github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'build') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'build')) }}
     uses: ./.github/workflows/docker_service_pipeline.yml
     with:
       service_name: availability-service
