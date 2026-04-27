@@ -1,18 +1,20 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const Availability = require('./models/Availability');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import Availability from './models/Availability.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// FIXED: Using correct environment variable
 const MONGO_URI = process.env.MONGO_URI_AVAILABILITY || process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Availability Service DB Connected'))
-  .catch(err => console.error('Availability DB Connection Error:', err));
+try {
+  await mongoose.connect(MONGO_URI);
+  console.log('Availability Service DB Connected');
+} catch (err) {
+  console.error('Availability DB Connection Error:', err);
+}
 
 app.post('/availability', async (req, res) => {
   try {
