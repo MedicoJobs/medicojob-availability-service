@@ -29,6 +29,28 @@ app.get('/availability/:userId', async (req, res) => {
       return res.json({ userId: req.params.userId, status: 'active' });
     }
     
+  try {
+    const { userId, status, shiftStart, shiftEnd } = req.body;
+    const availability = await Availability.findOneAndUpdate(
+      { userId },
+      { userId, status, shiftStart, shiftEnd },
+      { upsert: true, new: true, returnDocument: 'after' }
+    );
+    res.json(availability);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/availability/:userId', async (req, res) => {
+  try {
+    const availability = await Availability.findOne({ userId: req.params.userId });
+    
+    // FIXED: Instead of 404, return a default 'active' status
+    if (!availability) {
+      return res.json({ userId: req.params.userId, status: 'active' });
+    }
+    
     res.json(availability);
   } catch (error) {
     res.status(500).json({ error: error.message });
